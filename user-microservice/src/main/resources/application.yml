@@ -1,0 +1,34 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: UserMicroserviceApplication
+
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        instance-id: "Orange-Developer-Microservices:${spring.application.name}:${random.value}"
+        healthCheckUrl: "http://localhost:${server.port}/actuator/health"
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/userServiceDB
+    username: test
+    password: test
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  security:
+    enabled: false

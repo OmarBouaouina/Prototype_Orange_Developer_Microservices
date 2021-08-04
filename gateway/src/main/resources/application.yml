@@ -1,0 +1,52 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: GatewayApplication
+
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+    gateway:
+      metrics:
+        enabled: true
+      discovery:
+        healthCheckUrl: "http://localhost:${server.port}/actuator/health"
+#        prefer_ip_address: true
+        locator:
+          enabled: true
+      routes:
+        - id: UserMicroserviceApplication
+          uri: lb://UserMicroserviceApplication
+          predicates:
+            - Path=/users/**
+#          filters:
+#            - RewritePath=/(?<segment>.*), /user-service/$\{segment}
+
+        - id: AdminMicroserviceApplication
+          uri: lb://AdminMicroserviceApplication
+          predicates:
+            - Path=/admins/**
+
+        - id: DeveloperMicroserviceApplication
+            uri: lb://DeveloperMicroserviceApplication
+            predicates:
+              - Path=/developers/**
+
+        - id: ContentMicroserviceApplication
+            uri: lb://ContentMicroserviceApplication
+            predicates:
+              - Path=/content/**
+
+        - id: AuthMicroserviceApplication
+            uri: lb://authMicroserviceApplication
+            predicates:
+              - Path=/auth/**
+
+
+
+management:
+  security:
+    enabled: false
